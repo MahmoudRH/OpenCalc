@@ -7,15 +7,16 @@ import kotlin.math.*
 class Calculator {
 
     fun factorial(number: Double): Double {
-        val decimalPartOfNumber = number - number.toInt()
+        val absoluteNumber = number.absoluteValue
+        val decimalPartOfNumber = absoluteNumber - absoluteNumber.toInt()
         return if (decimalPartOfNumber == 0.0) {
             var factorial = BigInteger("1")
-            for (i in 1..number.toInt()) {
+            for (i in 1..absoluteNumber.toInt()) {
                 factorial *= i.toBigInteger()
             }
             factorial.toDouble()
         } else {
-            gammaLanczos(number+1)
+            gammaLanczos(absoluteNumber+1)
         }
     }
 

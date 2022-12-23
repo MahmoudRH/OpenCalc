@@ -76,7 +76,8 @@ class MainActivity : AppCompatActivity() {
         )
         binding.historyRecylcleView.layoutManager = historyLayoutMgr
         historyAdapter = HistoryAdapter(mutableListOf()) {
-            value -> run {
+                value ->
+            run {
                 val valueUpdated = value.replace(".", NumberFormatter.decimalSeparatorSymbol)
                 updateDisplay(window.decorView, valueUpdated)
             }
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             override fun onPanelStateChanged(panel: View, previousState: PanelState, newState: PanelState) {
-                if (newState == PanelState.ANCHORED){ // To prevent the panel from getting stuck in the middle
+                if (newState == PanelState.ANCHORED) { // To prevent the panel from getting stuck in the middle
                     binding.slidingLayout.panelState = PanelState.EXPANDED
                 }
             }
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         binding.input.accessibilityDelegate = object : View.AccessibilityDelegate() {
             override fun sendAccessibilityEvent(host: View, eventType: Int) {
                 super.sendAccessibilityEvent(host, eventType)
-                if (eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED){
+                if (eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED) {
                     isEqualLastAction = false
                 }
                 if (!binding.input.isCursorVisible) {
@@ -178,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                 it.toString()
             }
             if (anyNumber.contains(value)) {
-                    binding.input.setText("")
+                binding.input.setText("")
             } else {
                 binding.input.setSelection(binding.input.text.length)
                 binding.inputHorizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
@@ -209,13 +210,13 @@ class MainActivity : AppCompatActivity() {
                 // Avoid two decimalSeparator in the same number
                 // 1. When you click on the decimalSeparator button
                 if (value == decimalSeparatorSymbol && decimalSeparatorSymbol in binding.input.text.toString()) {
-                    if (binding.input.text.toString().isNotEmpty())  {
+                    if (binding.input.text.toString().isNotEmpty()) {
                         var lastNumberBefore = ""
-                        if (cursorPosition > 0  && binding.input.text.toString().substring(0, cursorPosition).last() in "0123456789\\$decimalSeparatorSymbol") {
+                        if (cursorPosition > 0 && binding.input.text.toString().substring(0, cursorPosition).last() in "0123456789\\$decimalSeparatorSymbol") {
                             lastNumberBefore = NumberFormatter.extractNumbers(binding.input.text.toString().substring(0, cursorPosition)).last()
                         }
                         var firstNumberAfter = ""
-                        if (cursorPosition < binding.input.text.length-1) {
+                        if (cursorPosition < binding.input.text.length - 1) {
                             firstNumberAfter = NumberFormatter.extractNumbers(binding.input.text.toString().substring(cursorPosition, binding.input.text.length)).first()
                         }
                         if (decimalSeparatorSymbol in lastNumberBefore || decimalSeparatorSymbol in firstNumberAfter) {
@@ -224,10 +225,10 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 // 2. When you click on a former calculation from the history
-                if (binding.input.text.isNotEmpty()
-                    && cursorPosition > 0
-                    && decimalSeparatorSymbol in value
-                    && value != decimalSeparatorSymbol // The value should not be *only* the decimal separator
+                if (binding.input.text.isNotEmpty() &&
+                    cursorPosition > 0 &&
+                    decimalSeparatorSymbol in value &&
+                    value != decimalSeparatorSymbol // The value should not be *only* the decimal separator
                 ) {
                     if (NumberFormatter.extractNumbers(value).isNotEmpty()) {
                         val firstValueNumber = NumberFormatter.extractNumbers(value).first()
@@ -245,7 +246,7 @@ class MainActivity : AppCompatActivity() {
                                 numberBefore = "($numberBefore)"
                                 numberBeforeParenthesisLength += 2
                             }
-                            if (decimalSeparatorSymbol in  numberAfter) {
+                            if (decimalSeparatorSymbol in numberAfter) {
                                 tmpValue = "($value)"
                             }
                             tmpNewValue = binding.input.text.toString().substring(0, (cursorPosition + numberBeforeParenthesisLength - numberBefore.length)) + numberBefore + tmpValue + rightValue
@@ -480,16 +481,18 @@ class MainActivity : AppCompatActivity() {
                 history.add(
                     History(
                         calculation = calculation,
-                        result = formattedResult,
+                        result = formattedResult
                     )
                 )
                 MyPreferences(this@MainActivity).saveHistory(this@MainActivity, history)
                 // Update history variables
                 withContext(Dispatchers.Main) {
-                    historyAdapter.appendOneHistoryElement(History(
-                        calculation = calculation,
-                        result = formattedResult,
-                    ))
+                    historyAdapter.appendOneHistoryElement(
+                        History(
+                            calculation = calculation,
+                            result = formattedResult
+                        )
+                    )
                     // Scroll to the bottom of the recycle view
                     binding.historyRecylcleView.scrollToPosition(historyAdapter.itemCount - 1)
                 }
@@ -543,9 +546,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (openParentheses == closeParentheses
-            || binding.input.text.toString().subSequence(textLength - 1, textLength) == "("
-            || binding.input.text.toString().subSequence(textLength - 1, textLength) in "×÷+-^"
+        if (openParentheses == closeParentheses ||
+            binding.input.text.toString().subSequence(textLength - 1, textLength) == "(" ||
+            binding.input.text.toString().subSequence(textLength - 1, textLength) in "×÷+-^"
         ) {
             updateDisplay(view, "(")
         } else if (closeParentheses < openParentheses && binding.input.text.toString().subSequence(
@@ -579,7 +582,7 @@ class MainActivity : AppCompatActivity() {
                 val text = binding.input.text.subSequence(0, cursorPosition).toString()
                 if (text.endsWith(function)) {
                     newValue = binding.input.text.subSequence(0, cursorPosition - function.length).toString() +
-                            binding.input.text.subSequence(cursorPosition, textLength).toString()
+                        binding.input.text.subSequence(cursorPosition, textLength).toString()
                     isFunction = true
                     functionLength = function.length - 1
                     break
@@ -588,7 +591,7 @@ class MainActivity : AppCompatActivity() {
             // Else
             if (!isFunction) {
                 newValue = binding.input.text.subSequence(0, cursorPosition - 1).toString() +
-                        binding.input.text.subSequence(cursorPosition, textLength).toString()
+                    binding.input.text.subSequence(cursorPosition, textLength).toString()
             }
 
             val newValueFormatted = NumberFormatter.format(newValue)
